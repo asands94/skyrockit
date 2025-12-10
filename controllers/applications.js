@@ -97,10 +97,10 @@ router.put('/:applicationId', async (req, res) => {
     try {
         // Find the user from req.session
         const currentUser = await User.findById(req.session.user._id)
+        // save the applicationId parameter to a variable since it will be used in multiple places
+        const applicationId = req.params.applicationId
         // Find the current application from the id supplied by req.params
-        const application = currentUser.applications.id(
-            req.params.applicationId
-        )
+        const application = currentUser.applications.id(applicationId)
         // Use the Mongoose .set() method
         // this method updates the current application to reflect the new form
         // data on `req.body`
@@ -108,9 +108,7 @@ router.put('/:applicationId', async (req, res) => {
         // Save the current user
         await currentUser.save()
         // Redirect back to the show view of the current application
-        res.redirect(
-            `/users/${currentUser._id}/applications/${req.params.applicationId}`
-        )
+        res.redirect(`/users/${currentUser._id}/applications/${applicationId}`)
     } catch (error) {
         console.log(error)
         res.redirect('/')
